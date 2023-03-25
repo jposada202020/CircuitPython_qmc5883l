@@ -15,8 +15,9 @@ Implementation Notes
 --------------------
 
 
-# * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
-# * Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
+* Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
+* Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
+
 """
 
 from micropython import const
@@ -26,7 +27,7 @@ from adafruit_register.i2c_bits import RWBits, ROBits
 
 try:
     from busio import I2C
-    from typing_extensions import Optional, NoReturn, Tuple
+    from typing_extensions import NoReturn
 except ImportError:
     pass
 
@@ -36,8 +37,8 @@ __repo__ = "https://github.com/jposada202020/CircuitPython_qmc5883l.git"
 _I2C_ADDR = const(0xD)
 _REG_WHOAMI = const(0x0D)
 _REG_SET_RESET = const(0x0B)
-_REG_OPERATION_MODE = const(0X09)
-_REG_STATUS = const(0X06)
+_REG_OPERATION_MODE = const(0x09)
+_REG_STATUS = const(0x06)
 
 OVERSAMPLE_64 = const(0b11)
 OVERSAMPLE_128 = const(0b10)
@@ -62,32 +63,32 @@ class QMC5883L:
     """Driver for the QMC5883L magnetometer connected over I2C.
 
     :param ~busio.I2C i2c_bus: The I2C bus the QMC5883L is connected to.
-    :param address: The I2C device address. Defaults to :const:`0xD`
+    :param int address: The I2C device address. Defaults to :const:`0xD`
 
     :raises RuntimeError: if the sensor is not found
 
-        **Quickstart: Importing and using the device**
+    **Quickstart: Importing and using the device**
 
-            Here is an example of using the :class:`QMC5883L` class.
-            First you will need to import the libraries to use the sensor
+    Here is an example of using the :class:`QMC5883L` class.
+    First you will need to import the libraries to use the sensor
 
-            .. code-block:: python
+        .. code-block:: python
 
-                import board
-                import circuitpython_qmc5883l.qmc5883l as qmc5883l
+            import board
+            import circuitpython_qmc5883l.qmc5883l as qmc5883l
 
-            Once this is done you can define your `board.I2C` object and define your sensor object
+    Once this is done you can define your `board.I2C` object and define your sensor object
 
-            .. code-block:: python
+        .. code-block:: python
 
-                i2c = board.I2C()  # uses board.SCL and board.SDA
-                qmc = qmc5883l.QMC5883L(i2c)
+            i2c = board.I2C()  # uses board.SCL and board.SDA
+            qmc = qmc5883l.QMC5883L(i2c)
 
-            Now you have access to the :attr:`magnetic` attribute
+    Now you have access to the :attr:`magnetic` attribute
 
-            .. code-block:: python
+        .. code-block:: python
 
-                mag_x, mag_y, mag_z = qmc.magnetic
+            mag_x, mag_y, mag_z = qmc.magnetic
 
 
     """
@@ -109,7 +110,6 @@ class QMC5883L:
 
     def __init__(self, i2c_bus: I2C, address: int = _I2C_ADDR) -> None:
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
-        self._buffer = bytearray(2)
         self.resolution = 12000
 
         if self._device_id != 0xFF:
@@ -118,34 +118,29 @@ class QMC5883L:
 
     @property
     def oversample(self) -> int:
-        """Over sample Rate (OSR) registers are used to control bandwidth of an
+        """
+        Over sample Rate (OSR) registers are used to control bandwidth of an
         internal digital filter. Larger OSR value leads to smaller filter bandwidth,
-         less in-band noise and higher power consumption. It could be used to reach a
+        less in-band noise and higher power consumption. It could be used to reach a
         good balance between noise and power.
 
-        """
-
-        return self._oversample
-
-    @oversample.setter
-    def oversample(self, rate: int) -> NoReturn:
-        """
         Four oversample ratios can be selected, 64, 128, 256 or 512. With the following
         global variables.
 
-        +----------------------------------------+---------------------+
-        | Mode                                   | Value               |
-        +========================================+=====================+
-        | :py:const:`qmc5883.OVERSAMPLE_64`      | const:`0b11`        |
-        +----------------------------------------+---------------------+
-        | :py:const:`qmc5883.OVERSAMPLE_128`     | const:`0b10`        |
-        +----------------------------------------+---------------------+
-        | :py:const:`qmc5883.OVERSAMPLE_256`     | const:`0b01`        |
-        +----------------------------------------+---------------------+
-        | :py:const:`qmc5883.OVERSAMPLE_512`     | const:`0b00`        |
-        +----------------------------------------+---------------------+
+        +----------------------------------------+-------------------------+
+        | Mode                                   | Value                   |
+        +========================================+=========================+
+        | :py:const:`qmc5883.OVERSAMPLE_64`      | :py:const:`0b11`        |
+        +----------------------------------------+-------------------------+
+        | :py:const:`qmc5883.OVERSAMPLE_128`     | :py:const:`0b10`        |
+        +----------------------------------------+-------------------------+
+        | :py:const:`qmc5883.OVERSAMPLE_256`     | :py:const:`0b01`        |
+        +----------------------------------------+-------------------------+
+        | :py:const:`qmc5883.OVERSAMPLE_512`     | :py:const:`0b00`        |
+        +----------------------------------------+-------------------------+
 
-        E.g.:
+        Example
+        ---------------------
 
         .. code-block:: python
 
@@ -156,6 +151,11 @@ class QMC5883L:
             qmc.oversample = qmc5883.OVERSAMPLE_64
 
         """
+
+        return self._oversample
+
+    @oversample.setter
+    def oversample(self, rate: int) -> NoReturn:
 
         self._oversample = rate
 
@@ -168,26 +168,20 @@ class QMC5883L:
         magnetic sensor. The lowest field range has the highest sensitivity, therefore,
         higher resolution.
 
-        """
-
-        return self._field_range
-
-    @field_range.setter
-    def field_range(self, range: int) -> NoReturn:
-        """
         Two field range values can be selected, 2G and 8G. With the following
         global variables.
 
-        +----------------------------------------+---------------------+
-        | Mode                                   | Value               |
-        +========================================+=====================+
-        | :py:const:`qmc5883.FIELDRANGE_2G`      | const:`0b00`        |
-        +----------------------------------------+---------------------+
-        | :py:const:`qmc5883.FIELDRANGE_8G`      | const:`0b01`        |
-        +----------------------------------------+---------------------+
+        +----------------------------------------+-------------------------+
+        | Mode                                   | Value                   |
+        +========================================+=========================+
+        | :py:const:`qmc5883.FIELDRANGE_2G`      | :py:const:`0b00`        |
+        +----------------------------------------+-------------------------+
+        | :py:const:`qmc5883.FIELDRANGE_8G`      | :py:const:`0b01`        |
+        +----------------------------------------+-------------------------+
 
 
-        E.g.:
+        Example
+        ---------------------
 
         .. code-block:: python
 
@@ -198,45 +192,46 @@ class QMC5883L:
             qmc.field_range = qmc5883.FIELDRANGE_2G
 
         """
+
+        return self._field_range
+
+    @field_range.setter
+    def field_range(self, field_range: int) -> NoReturn:
+
         if range == 1:
             self.resolution = 3000
         else:
             self.resolution = 12000
 
-        self._field_range = range
+        self._field_range = field_range
 
     @property
     def output_data_rate(self) -> int:
         """Output data rate is controlled by ODR registers. Four data update
-         frequencies can be selected: 10Hz, 50Hz, 100Hz and 200Hz.
-         For most compassing applications, 10 Hz for low
-         power consumption is recommended. For gaming, the high update rate such as
-         100Hz or 200Hz can be used.
+        frequencies can be selected: 10Hz, 50Hz, 100Hz and 200Hz.
+        For most compassing applications, 10 Hz for low
+        power consumption is recommended. For gaming, the high update rate such as
+        100Hz or 200Hz can be used.
 
-        """
 
-        return self._output_data_rate
-
-    @output_data_rate.setter
-    def output_data_rate(self, rate: int) -> NoReturn:
-        """
         Four oversample ratios can be selected, 10, 50, 100 or 200. With the following
         global variables.
 
-        +-------------------------------------------+---------------------+
-        | Mode                                      | Value               |
-        +===========================================+=====================+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_10`   | const:`0b00`        |
-        +-------------------------------------------+---------------------+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_50`   | const:`0b01`        |
-        +-------------------------------------------+---------------------+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_100`  | const:`0b10`        |
-        +-------------------------------------------+---------------------+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_200`  | const:`0b11`        |
-        +-------------------------------------------+---------------------+
+        +-------------------------------------------+-------------------------+
+        | Mode                                      | Value                   |
+        +===========================================+=========================+
+        | :py:const:`qmc5883.OUTPUT_DATA_RATE_10`   | :py:const:`0b00`        |
+        +-------------------------------------------+-------------------------+
+        | :py:const:`qmc5883.OUTPUT_DATA_RATE_50`   | :py:const:`0b01`        |
+        +-------------------------------------------+-------------------------+
+        | :py:const:`qmc5883.OUTPUT_DATA_RATE_100`  | :py:const:`0b10`        |
+        +-------------------------------------------+-------------------------+
+        | :py:const:`qmc5883.OUTPUT_DATA_RATE_200`  | :py:const:`0b11`        |
+        +-------------------------------------------+-------------------------+
 
 
-        E.g.:
+        Example
+        ---------------------
 
         .. code-block:: python
 
@@ -248,36 +243,34 @@ class QMC5883L:
 
         """
 
+        return self._output_data_rate
+
+    @output_data_rate.setter
+    def output_data_rate(self, rate: int) -> NoReturn:
+
         self._output_data_rate = rate
 
     @property
     def mode_control(self) -> int:
         """Two bits of MODE registers can transfer mode of operations in the device,
-         the two modes are Standby, and Continuous measurements. The default mode
-         after Power-on-Reset (POR) is standby. There is no any restriction
-         in the transferring between the modes.
+        the two modes are Standby, and Continuous measurements. The default mode
+        after Power-on-Reset (POR) is standby. There is no any restriction
+        in the transferring between the modes.
 
-        """
-
-        return self._mode_control
-
-    @mode_control.setter
-    def mode_control(self, mode: int) -> NoReturn:
-        """
         Two modes can be selected Standby and Continuous With the following
         global variables.
 
-        +-------------------------------------------+---------------------+
-        | Mode                                      | Value               |
-        +===========================================+=====================+
-        | :py:const:`qmc5883.MODE_CONTINUOUS`       | const:`0b01`        |
-        +-------------------------------------------+---------------------+
-        | :py:const:`qmc5883.MODE_STANDBY`          | const:`0b00`        |
-        +-------------------------------------------+---------------------+
+        +-------------------------------------------+-------------------------+
+        | Mode                                      | Value                   |
+        +===========================================+=========================+
+        | :py:const:`qmc5883.MODE_CONTINUOUS`       | :py:const:`0b01`        |
+        +-------------------------------------------+-------------------------+
+        | :py:const:`qmc5883.MODE_STANDBY`          | :py:const:`0b00`        |
+        +-------------------------------------------+-------------------------+
 
 
-
-        E.g.:
+        Example
+        ---------------------
 
         .. code-block:: python
 
@@ -289,12 +282,30 @@ class QMC5883L:
 
         """
 
+        return self._mode_control
+
+    @mode_control.setter
+    def mode_control(self, mode: int) -> NoReturn:
+
         self._mode_control = mode
 
     @property
-    def magnetic(self) -> Tuple:
+    def magnetic(self):
+        """Magnetic property"""
         if self._data_ready_register == 1:
 
-            values = self._x_LSB, self._x_MSB, self._y_LSB, self._y_MSB, self._z_LSB, self._z_MSB
+            values = (
+                self._x_LSB,
+                self._x_MSB,
+                self._y_LSB,
+                self._y_MSB,
+                self._z_LSB,
+                self._z_MSB,
+            )
 
-            return values[0]/self.resolution, values[2]/self.resolution, values[4]/self.resolution
+            return (
+                values[0] / self.resolution,
+                values[2] / self.resolution,
+                values[4] / self.resolution,
+            )
+        return None

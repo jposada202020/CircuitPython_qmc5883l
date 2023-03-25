@@ -79,7 +79,7 @@ Or the following command to update an existing version:
 Usage Example
 =============
 
-Take a look a the `qmc5883l_simpletest.py` in the examples directory
+Take a look a the ``qmc5883l_simpletest.py`` in the examples directory
 
 Documentation
 =============
