@@ -43,17 +43,26 @@ OVERSAMPLE_64 = const(0b11)
 OVERSAMPLE_128 = const(0b10)
 OVERSAMPLE_256 = const(0b01)
 OVERSAMPLE_512 = const(0b00)
+oversample_values = (OVERSAMPLE_64, OVERSAMPLE_128, OVERSAMPLE_256, OVERSAMPLE_512)
 
 FIELDRANGE_2G = const(0b00)
 FIELDRANGE_8G = const(0b01)
+field_range_values = (FIELDRANGE_2G, FIELDRANGE_8G)
 
 OUTPUT_DATA_RATE_10 = const(0b00)
 OUTPUT_DATA_RATE_50 = const(0b01)
 OUTPUT_DATA_RATE_100 = const(0b10)
 OUTPUT_DATA_RATE_200 = const(0b11)
+data_rate_values = (
+    OUTPUT_DATA_RATE_10,
+    OUTPUT_DATA_RATE_50,
+    OUTPUT_DATA_RATE_100,
+    OUTPUT_DATA_RATE_200,
+)
 
 MODE_STANDBY = const(0b00)
 MODE_CONTINUOUS = const(0b01)
+mode_values = (MODE_STANDBY, MODE_CONTINUOUS)
 
 RESET_VALUE = const(0b01)
 
@@ -124,13 +133,13 @@ class QMC5883L:
         +----------------------------------------+-------------------------+
         | Mode                                   | Value                   |
         +========================================+=========================+
-        | :py:const:`qmc5883.OVERSAMPLE_64`      | :py:const:`0b11`        |
+        | :py:const:`qmc5883l.OVERSAMPLE_64`     | :py:const:`0b11`        |
         +----------------------------------------+-------------------------+
-        | :py:const:`qmc5883.OVERSAMPLE_128`     | :py:const:`0b10`        |
+        | :py:const:`qmc5883l.OVERSAMPLE_128`    | :py:const:`0b10`        |
         +----------------------------------------+-------------------------+
-        | :py:const:`qmc5883.OVERSAMPLE_256`     | :py:const:`0b01`        |
+        | :py:const:`qmc5883l.OVERSAMPLE_256`    | :py:const:`0b01`        |
         +----------------------------------------+-------------------------+
-        | :py:const:`qmc5883.OVERSAMPLE_512`     | :py:const:`0b00`        |
+        | :py:const:`qmc5883l.OVERSAMPLE_512`    | :py:const:`0b00`        |
         +----------------------------------------+-------------------------+
 
         Example
@@ -139,19 +148,28 @@ class QMC5883L:
         .. code-block:: python
 
             i2c = board.I2C()
-            qmc = qmc5883.QMC5883L(i2c)
+            qmc = qmc5883l.QMC5883L(i2c)
 
 
-            qmc.oversample = qmc5883.OVERSAMPLE_64
+            qmc.oversample = qmc5883l.OVERSAMPLE_64
 
         """
 
-        return self._oversample
+        oversamples = (
+            "OVERSAMPLE_512",
+            "OVERSAMPLE_256",
+            "OVERSAMPLE_128",
+            "OVERSAMPLE_64",
+        )
+
+        return oversamples[self._oversample]
 
     @oversample.setter
-    def oversample(self, rate: int) -> None:
+    def oversample(self, value: int) -> None:
+        if value not in oversample_values:
+            raise ValueError("Value must be a valid oversample setting")
 
-        self._oversample = rate
+        self._oversample = value
 
     @property
     def field_range(self) -> int:
@@ -168,9 +186,9 @@ class QMC5883L:
         +----------------------------------------+-------------------------+
         | Mode                                   | Value                   |
         +========================================+=========================+
-        | :py:const:`qmc5883.FIELDRANGE_2G`      | :py:const:`0b00`        |
+        | :py:const:`qmc5883l.FIELDRANGE_2G`     | :py:const:`0b00`        |
         +----------------------------------------+-------------------------+
-        | :py:const:`qmc5883.FIELDRANGE_8G`      | :py:const:`0b01`        |
+        | :py:const:`qmc5883l.FIELDRANGE_8G`     | :py:const:`0b01`        |
         +----------------------------------------+-------------------------+
 
 
@@ -180,24 +198,28 @@ class QMC5883L:
         .. code-block:: python
 
             i2c = board.I2C()
-            qmc = qmc5883.QMC5883L(i2c)
+            qmc = qmc5883l.QMC5883L(i2c)
 
 
-            qmc.field_range = qmc5883.FIELDRANGE_2G
+            qmc.field_range = qmc5883l.FIELDRANGE_2G
 
         """
 
-        return self._field_range
+        ranges = ("FIELDRANGE_2G", "FIELDRANGE_8G")
+
+        return ranges[self._field_range]
 
     @field_range.setter
-    def field_range(self, field_range: int) -> None:
+    def field_range(self, value: int) -> None:
+        if value not in field_range_values:
+            raise ValueError("Value must be a valid field range setting")
 
-        if field_range == 1:
+        if value == 1:
             self.resolution = 3000
         else:
             self.resolution = 12000
 
-        self._field_range = field_range
+        self._field_range = value
 
     @property
     def output_data_rate(self) -> int:
@@ -214,13 +236,13 @@ class QMC5883L:
         +-------------------------------------------+-------------------------+
         | Mode                                      | Value                   |
         +===========================================+=========================+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_10`   | :py:const:`0b00`        |
+        | :py:const:`qmc5883l.OUTPUT_DATA_RATE_10`  | :py:const:`0b00`        |
         +-------------------------------------------+-------------------------+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_50`   | :py:const:`0b01`        |
+        | :py:const:`qmc5883l.OUTPUT_DATA_RATE_50`  | :py:const:`0b01`        |
         +-------------------------------------------+-------------------------+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_100`  | :py:const:`0b10`        |
+        | :py:const:`qmc5883l.OUTPUT_DATA_RATE_100` | :py:const:`0b10`        |
         +-------------------------------------------+-------------------------+
-        | :py:const:`qmc5883.OUTPUT_DATA_RATE_200`  | :py:const:`0b11`        |
+        | :py:const:`qmc5883l.OUTPUT_DATA_RATE_200` | :py:const:`0b11`        |
         +-------------------------------------------+-------------------------+
 
 
@@ -230,19 +252,29 @@ class QMC5883L:
         .. code-block:: python
 
             i2c = board.I2C()
-            qmc = qmc5883.QMC5883L(i2c)
+            qmc = qmc5883l.QMC5883L(i2c)
 
 
-            qmc.output_data_rate = qmc5883.OUTPUT_DATA_RATE_200
+            qmc.output_data_rate = qmc5883l.OUTPUT_DATA_RATE_200
 
         """
 
-        return self._output_data_rate
+        rates = (
+            "OUTPUT_DATA_RATE_10",
+            "OUTPUT_DATA_RATE_50",
+            "OUTPUT_DATA_RATE_100",
+            "OUTPUT_DATA_RATE_200",
+        )
+
+        return rates[self._output_data_rate]
 
     @output_data_rate.setter
-    def output_data_rate(self, rate: int) -> None:
+    def output_data_rate(self, value: int) -> None:
 
-        self._output_data_rate = rate
+        if value not in data_rate_values:
+            raise ValueError("Value must be a valid data rate setting")
+
+        self._output_data_rate = value
 
     @property
     def mode_control(self) -> int:
@@ -257,10 +289,11 @@ class QMC5883L:
         +-------------------------------------------+-------------------------+
         | Mode                                      | Value                   |
         +===========================================+=========================+
-        | :py:const:`qmc5883.MODE_CONTINUOUS`       | :py:const:`0b01`        |
+        | :py:const:`qmc5883l.MODE_CONTINUOUS`      | :py:const:`0b01`        |
         +-------------------------------------------+-------------------------+
-        | :py:const:`qmc5883.MODE_STANDBY`          | :py:const:`0b00`        |
+        | :py:const:`qmc5883l.MODE_STANDBY`         | :py:const:`0b00`        |
         +-------------------------------------------+-------------------------+
+
 
 
         Example
@@ -269,19 +302,21 @@ class QMC5883L:
         .. code-block:: python
 
             i2c = board.I2C()
-            qmc = qmc5883.QMC5883L(i2c)
+            qmc = qmc5883l.QMC5883L(i2c)
 
 
-            qmc.output_data_rate = qmc5883.MODE_STANDBY
+            qmc.output_data_rate = qmc5883l.MODE_STANDBY
 
         """
+        modes = ("MODE_STANDBY", "MODE_CONTINUOUS")
 
-        return self._mode_control
+        return modes[self._mode_control]
 
     @mode_control.setter
-    def mode_control(self, mode: int) -> None:
-
-        self._mode_control = mode
+    def mode_control(self, value: int) -> None:
+        if value not in mode_values:
+            raise ValueError("Value must be a valid mode setting")
+        self._mode_control = value
 
     @property
     def magnetic(self):
