@@ -27,7 +27,6 @@ from adafruit_register.i2c_bits import RWBits, ROBits
 
 try:
     from busio import I2C
-    from typing_extensions import NoReturn
 except ImportError:
     pass
 
@@ -155,7 +154,7 @@ class QMC5883L:
         return self._oversample
 
     @oversample.setter
-    def oversample(self, rate: int) -> NoReturn:
+    def oversample(self, rate: int) -> None:
 
         self._oversample = rate
 
@@ -196,9 +195,9 @@ class QMC5883L:
         return self._field_range
 
     @field_range.setter
-    def field_range(self, field_range: int) -> NoReturn:
+    def field_range(self, field_range: int) -> None:
 
-        if range == 1:
+        if field_range == 1:
             self.resolution = 3000
         else:
             self.resolution = 12000
@@ -246,7 +245,7 @@ class QMC5883L:
         return self._output_data_rate
 
     @output_data_rate.setter
-    def output_data_rate(self, rate: int) -> NoReturn:
+    def output_data_rate(self, rate: int) -> None:
 
         self._output_data_rate = rate
 
@@ -285,7 +284,7 @@ class QMC5883L:
         return self._mode_control
 
     @mode_control.setter
-    def mode_control(self, mode: int) -> NoReturn:
+    def mode_control(self, mode: int) -> None:
 
         self._mode_control = mode
 
