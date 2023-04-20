@@ -3,15 +3,15 @@
 # SPDX-License-Identifier: MIT
 import time
 import board
-import circuitpython_qmc5883l as qmc5883
+import qmc5883l
 
 i2c = board.I2C()
-qmc = qmc5883.QMC5883L(i2c)
+qmc = qmc5883l.QMC5883L(i2c)
 
-qmc.oversample = qmc5883.OVERSAMPLE_128
-qmc.field_range = qmc5883.FIELDRANGE_2G
-qmc.output_data_rate = qmc5883.OUTPUT_DATA_RATE_200
-qmc.mode_control = qmc5883.MODE_CONTINUOUS
+qmc.oversample = qmc5883l.OVERSAMPLE_128
+qmc.field_range = qmc5883l.FIELDRANGE_2G
+qmc.output_data_rate = qmc5883l.OUTPUT_DATA_RATE_200
+qmc.mode_control = qmc5883l.MODE_CONTINUOUS
 
 for i in range(50):
     mag_x, mag_y, mag_z = qmc.magnetic

@@ -1,4 +1,3 @@
-# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 # SPDX-FileCopyrightText: Copyright (c) 2023 Jose D. Montoya for Trinity
 #
 # SPDX-License-Identifier: MIT
@@ -20,9 +19,10 @@ Implementation Notes
 
 """
 
+import time
 from micropython import const
 from adafruit_bus_device import i2c_device
-from adafruit_register.i2c_struct import ROUnaryStruct, UnaryStruct
+from adafruit_register.i2c_struct import ROUnaryStruct, UnaryStruct, Struct
 from adafruit_register.i2c_bits import RWBits, ROBits
 
 try:
@@ -74,7 +74,7 @@ class QMC5883L:
         .. code-block:: python
 
             import board
-            import circuitpython_qmc5883l.qmc5883l as qmc5883l
+            import qmc5883l
 
     Once this is done you can define your `board.I2C` object and define your sensor object
 
@@ -100,12 +100,7 @@ class QMC5883L:
     _output_data_rate = RWBits(2, _REG_OPERATION_MODE, 2)
     _mode_control = RWBits(2, _REG_OPERATION_MODE, 0)
     _data_ready_register = ROBits(1, _REG_STATUS, 2)
-    _x_LSB = ROUnaryStruct(0x00, "H")
-    _x_MSB = ROUnaryStruct(0x01, "H")
-    _y_LSB = ROUnaryStruct(0x02, "H")
-    _y_MSB = ROUnaryStruct(0x03, "H")
-    _z_LSB = ROUnaryStruct(0x04, "H")
-    _z_MSB = ROUnaryStruct(0x05, "H")
+    _measures = Struct(0x00, "<hhhBh")
 
     def __init__(self, i2c_bus: I2C, address: int = _I2C_ADDR) -> None:
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
@@ -291,36 +286,8 @@ class QMC5883L:
     @property
     def magnetic(self):
         """Magnetic property"""
-        if self._data_ready_register == 1:
+        while self._data_ready_register != 1:
+            time.sleep(0.001)
+        x, y, z, _, _ = self._measures
 
-            values = (
-                self._x_LSB,
-                self._x_MSB,
-                self._y_LSB,
-                self._y_MSB,
-                self._z_LSB,
-                self._z_MSB,
-            )
-
-            return (
-                values[0] / self.resolution,
-                values[2] / self.resolution,
-                values[4] / self.resolution,
-            )
-        return None
-
-    @staticmethod
-    def twos_complement(val: int, bits: int) -> int:
-        """
-
-        Args:
-            val: Value to be converted
-            bits: nummber of bits
-
-        Returns: Converted Value
-
-        """
-        if val & (1 << (bits - 1)):
-            val -= 1 << bits
-
-        return val
+        return x / self.resolution, y / self.resolution, z / self.resolution
