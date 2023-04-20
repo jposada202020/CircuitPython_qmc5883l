@@ -308,3 +308,10 @@ class QMC5883L:
                 values[4] / self.resolution,
             )
         return None
+
+    @staticmethod
+    def twos_complement(val: int, bits: int) -> int:
+        if val & (1 << (bits - 1)):
+            val -= 1 << bits
+
+        return val
