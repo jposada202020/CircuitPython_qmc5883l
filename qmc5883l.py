@@ -311,6 +311,15 @@ class QMC5883L:
 
     @staticmethod
     def twos_complement(val: int, bits: int) -> int:
+        """
+
+        Args:
+            val: Value to be converted
+            bits: nummber of bits
+
+        Returns: Converted Value
+
+        """
         if val & (1 << (bits - 1)):
             val -= 1 << bits
 
