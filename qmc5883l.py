@@ -116,7 +116,7 @@ class QMC5883L:
         self.resolution = 12000
 
         if self._device_id != 0xFF:
-            raise RuntimeError("Failed to find QMC5883L")
+            raise RuntimeError("Failed to find the QMC5883L!")
         self._reset = 0x01
 
         self.oversample = OVERSAMPLE_128
