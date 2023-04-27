@@ -119,6 +119,11 @@ class QMC5883L:
             raise RuntimeError("Failed to find QMC5883L")
         self._reset = 0x01
 
+        self.oversample = OVERSAMPLE_128
+        self.field_range = FIELDRANGE_2G
+        self.output_data_rate = OUTPUT_DATA_RATE_200
+        self.mode_control = MODE_CONTINUOUS
+
     @property
     def oversample(self) -> int:
         """

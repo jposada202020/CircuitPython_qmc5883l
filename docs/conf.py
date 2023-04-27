@@ -139,7 +139,7 @@ html_theme_options = {
             "link": "https://pypi.org/project/circuitpython-qmc5883l/",
         },
         {
-            "name": "MicroPython Downloads",
+            "name": "CircuitPython Downloads",
             "icon": "octicons/download-24",
             "link": "https://circuitpython.org",
         },
