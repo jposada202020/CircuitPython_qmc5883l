@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 # pylint: disable=protected-access
+
 import board
 import qmc5883l
 

@@ -5,6 +5,7 @@
 """ Based in example found in
 https://github.com/adafruit/Adafruit_CircuitPython_LSM303DLH_Mag/blob/main/examples/lsm303dlh_mag_compass.py
 """
+
 import time
 from math import atan2, degrees
 import board

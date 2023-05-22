@@ -92,10 +92,3 @@ Take a look a the ``qmc5883l_simpletest.py`` in the examples directory
 Documentation
 =============
 API documentation for this library can be found on `Read the Docs <https://circuitpython-qmc5883l.readthedocs.io/>`_.
-
-Contributing
-============
-
-Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/jposada202020/CircuitPython_qmc5883l/blob/HEAD/CODE_OF_CONDUCT.md>`_
-before contributing to help this project stay welcoming.
