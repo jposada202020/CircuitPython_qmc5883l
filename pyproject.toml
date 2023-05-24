@@ -16,7 +16,7 @@ description = "CircuitPython driver for the qmc5883l magnetometer"
 version = "0.0.0+auto.0"
 readme = "README.rst"
 authors = [
-    {name = "Jose D. Montoya", email = "qmc@mailmeto.mozmail.com"}
+    {name = "JDM", email = "jdm@mozmail.com"}
 ]
 urls = {Homepage = "https://github.com/jposada202020/CircuitPython_qmc5883l"}
 keywords = [
