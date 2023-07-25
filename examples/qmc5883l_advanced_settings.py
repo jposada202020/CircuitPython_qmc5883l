@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2023 Jose D. Montoya
 #
 # SPDX-License-Identifier: MIT
-# pylint: disable=protected-access
 
 import board
 import qmc5883l

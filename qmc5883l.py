@@ -8,7 +8,7 @@
 CircuitPython driver for the qmc5883l magnetometer
 
 
-* Author(s): Jose D. Montoya
+* Author: Jose D. Montoya
 
 Implementation Notes
 --------------------
@@ -27,6 +27,7 @@ from adafruit_register.i2c_bits import RWBits, ROBits
 
 try:
     from busio import I2C
+    from typing import Tuple
 except ImportError:
     pass
 
@@ -177,7 +178,7 @@ class QMC5883L:
         self._oversample = value
 
     @property
-    def field_range(self) -> int:
+    def field_range(self) -> str:
         """Field ranges of the magnetic sensor can be selected through the register RNG.
         The full scale field range is determined by the application environments.
         For magnetic clear environment, low field range such as +/- 2gauss
@@ -227,7 +228,7 @@ class QMC5883L:
         self._field_range = value
 
     @property
-    def output_data_rate(self) -> int:
+    def output_data_rate(self) -> str:
         """Output data rate is controlled by ODR registers. Four data update
         frequencies can be selected: 10Hz, 50Hz, 100Hz and 200Hz.
         For most compassing applications, 10 Hz for low
@@ -275,14 +276,13 @@ class QMC5883L:
 
     @output_data_rate.setter
     def output_data_rate(self, value: int) -> None:
-
         if value not in data_rate_values:
             raise ValueError("Value must be a valid data rate setting")
 
         self._output_data_rate = value
 
     @property
-    def mode_control(self) -> int:
+    def mode_control(self) -> str:
         """Two bits of MODE registers can transfer mode of operations in the device,
         the two modes are Standby, and Continuous measurements. The default mode
         after Power-on-Reset (POR) is standby. There is no any restriction
@@ -324,7 +324,7 @@ class QMC5883L:
         self._mode_control = value
 
     @property
-    def magnetic(self):
+    def magnetic(self) -> Tuple[float, float, float]:
         """Magnetic property"""
         while self._data_ready_register != 1:
             time.sleep(0.001)

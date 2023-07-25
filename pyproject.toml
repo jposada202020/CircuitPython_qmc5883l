@@ -4,33 +4,24 @@
 # SPDX-License-Identifier: MIT
 
 [build-system]
-requires = [
-    "setuptools",
-    "wheel",
-    "setuptools-scm",
-]
+requires = ["setuptools", "wheel", "setuptools-scm"]
 
 [project]
 name = "circuitpython-qmc5883l"
 description = "CircuitPython driver for the qmc5883l magnetometer"
 version = "0.0.0+auto.0"
 readme = "README.rst"
-authors = [
-    {name = "JDM", email = "jdm@mozmail.com"}
-]
-urls = {Homepage = "https://github.com/jposada202020/CircuitPython_qmc5883l"}
+authors = [{ name = "JDM", email = "jdm@mozmail.com" }]
+urls = { Homepage = "https://github.com/jposada202020/CircuitPython_qmc5883l" }
 keywords = [
-    "adafruit",
-    "blinka",
     "circuitpython",
     "micropython",
-    "qmc5883l",
     "magnetometer",
     "driver",
     "sensor",
     "qmc5883l",
 ]
-license = {text = "MIT"}
+license = { text = "MIT" }
 classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries",
@@ -45,5 +36,5 @@ dynamic = ["dependencies", "optional-dependencies"]
 py-modules = ["qmc5883l"]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-optional-dependencies = {optional = {file = ["optional_requirements.txt"]}}
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies = { optional = { file = ["optional_requirements.txt"] } }

@@ -88,7 +88,3 @@ Usage Example
 =============
 
 Take a look a the ``qmc5883l_simpletest.py`` in the examples directory
-
-Documentation
-=============
-API documentation for this library can be found on `Read the Docs <https://circuitpython-qmc5883l.readthedocs.io/>`_.
