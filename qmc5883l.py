@@ -81,23 +81,23 @@ class QMC5883L:
     Here is an example of using the :class:`QMC5883L` class.
     First you will need to import the libraries to use the sensor
 
-        .. code-block:: python
+    .. code-block:: python
 
-            import board
-            import qmc5883l
+        import board
+        import qmc5883l
 
     Once this is done you can define your `board.I2C` object and define your sensor object
 
-        .. code-block:: python
+    .. code-block:: python
 
-            i2c = board.I2C()  # uses board.SCL and board.SDA
-            qmc = qmc5883l.QMC5883L(i2c)
+        i2c = board.I2C()  # uses board.SCL and board.SDA
+        qmc = qmc5883l.QMC5883L(i2c)
 
     Now you have access to the :attr:`magnetic` attribute
 
-        .. code-block:: python
+    .. code-block:: python
 
-            mag_x, mag_y, mag_z = qmc.magnetic
+        mag_x, mag_y, mag_z = qmc.magnetic
 
 
     """
